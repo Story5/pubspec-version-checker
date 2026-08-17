@@ -1,88 +1,127 @@
 # Pubspec 版本检查器（Pubspec Version Checker）
 
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code%20Marketplace-Install-blue?logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=story5.pubspec-version-checker)
+
 一个 VS Code 扩展：**自动检查 Flutter / Dart 项目 `pubspec.yaml` 中依赖（Package）与插件（Plugin）使用的版本，与 [pub.dev](https://pub.dev) 发布的最新版本对比，并通过多种可视化方式提醒开发者有新版本可用。**
 
-## 功能特性
+---
 
-- 📋 **CodeLens 提示**：在每个依赖行上方显示最新版本，如 `↗ 有新版 1.5.0（当前 1.2.0）`，点击可直接更新
-- 🖍️ **版本号高亮**：过期的版本号在编辑器中以黄色虚线 / 背景高亮
-- ⚠️ **问题面板诊断**：过期的依赖在「问题」面板生成警告（支持跳转到 pubspec.yaml 对应行）
-- 📊 **状态栏**：显示「N 个依赖可更新」，鼠标悬停查看明细，点击可重新检查
-- 🌲 **活动栏树视图**：按「可更新 / 已是最新 / 其他」分组展示全部依赖，点击跳转 pub.dev
+## ✨ 功能特性
+
+- 📋 **CodeLens 提示**：在每个依赖行上方显示最新版本，如 `🔺 http 1.5.0 有新版本`，点击即可更新
+- 🖍️ **版本号高亮**：过期的版本号在编辑器中以**黄色波浪线**标记，已是最新用绿色标记
+- ⚠️ **问题面板诊断**：过期的依赖在「问题」面板生成警告，支持跳转到 `pubspec.yaml` 对应行
+- 📊 **状态栏**：显示「N 个依赖可更新」，点击可重新检查
+- 🌲 **活动栏树视图**：按「可更新 / 已是最新 / 未锁定」分组展示全部依赖
 - 🔍 **Hover 详情**：鼠标悬停依赖行，展示约束 / 当前 / 最新 / 预发布版本
-- ⚡ **一键更新**：选择「更新约束为 ^最新版本」，自动改写 `pubspec.yaml`
-- 🧠 **智能判断**：优先读取 `pubspec.lock` 中的实际安装版本对比；无锁文件时判断最新版是否落在当前约束内
+- ⚡ **一键更新**：选择「更新约束为 `^最新版本`」，自动改写 `pubspec.yaml`
 - ⏱️ **缓存与并发**：版本查询结果缓存 1 小时（可配置），并发请求防限流
 - 🚫 **排除列表**：可跳过私有包 / 不想升级的包
 
-## 工作原理
+---
 
-1. 解析工作区根目录的 `pubspec.yaml`（`dependencies` / `dev_dependencies` / `dependency_overrides`，含 `git:` / `path:` / `sdk:` 依赖的识别）
-2. 读取 `pubspec.lock` 获取当前实际安装版本（仅 `hosted` 来源）
-3. 调用 [pub.dev API](https://pub.dev/api/packages/<pkg>) 获取每个包的最新稳定版（含预发布信息）
-4. 版本对比规则：优先「锁文件版本 vs 最新版」；无锁文件时按「最新版是否满足版本约束」判断
-5. 通过 CodeLens / 装饰 / 诊断 / 状态栏 / 树视图 / Hover 六种渠道可视化呈现
+## 📸 使用示意
 
-## 安装
+### 1. 打开 pubspec.yaml，自动看到更新提示
 
-### 方式一：直接安装 vsix（推荐）
+打开任意 Flutter / Dart 项目，扩展会自动激活。过期的依赖行上方会出现 **CodeLens**，版本号会被黄色波浪线标注，底部状态栏显示可更新数量。
+
+![CodeLens 与问题面板](media/screenshot-codeLens.png)
+
+- **CodeLens**：`🔺 http 1.5.0 有新版本` —— 点击即可弹出更新菜单
+- **版本号下划线**：黄色表示过期，绿色表示已是最新
+- **问题面板**：列出所有过期依赖，点击直接跳转到对应行
+- **状态栏**：`⬆ Pubspec: 3 个依赖可更新`
+
+### 2. 一键批量更新
+
+点击 CodeLens 或树视图中的依赖，可以选择**更新选中依赖 / 全部更新**。扩展会自动把版本约束改写为 `^最新版本`。
+
+![一键更新依赖](media/screenshot-update.png)
+
+---
+
+## 📦 安装方式
+
+### 方式一：从 VS Code 应用商店安装（推荐）
+
+1. 打开 VS Code
+2. 点击左侧活动栏的 **Extensions**（扩展）图标，或按 `Ctrl/Cmd + Shift + X`
+3. 搜索框输入：`Pubspec 版本检查器` 或 `pubspec version checker`
+4. 找到由 **story5** 发布的扩展，点击 **Install**
+
+> 安装后无需配置，打开任意包含 `pubspec.yaml` 的项目即可自动生效。
+
+### 方式二：本地安装 vsix
+
+如果你已经拿到 `.vsix` 文件：
 
 ```bash
-# 在项目目录下执行打包
+# 在扩展目录下执行
 npx @vscode/vsce package
 # 生成 pubspec-version-checker-0.1.0.vsix
-# VS Code 命令面板 → Extensions: Install from VSIX... 选择该文件
 ```
 
-### 方式二：从源码调试运行
+然后在 VS Code 中：
 
-1. 克隆 / 打开本项目目录
-2. `npm install`
-3. 按 `F5`（选择「运行扩展（调试）」），会打开新的「扩展开发宿主」窗口
-4. 在新窗口中打开任意 Flutter / Dart 项目，即可看到效果
+- 打开命令面板（`Ctrl/Cmd + Shift + P`）
+- 输入 `Extensions: Install from VSIX...`
+- 选择生成的 `pubspec-version-checker-0.1.0.vsix`
 
-## 使用说明
+### 方式三：从源码运行/调试
 
-打开 Flutter / Dart 项目后，扩展会自动激活并检查：
+```bash
+git clone https://github.com/Story5/pubspec-version-checker.git
+cd pubspec-version-checker
+npm install
+```
 
-| 视觉元素 | 说明 |
-| --- | --- |
-| 依赖行上方 CodeLens | `↗ 有新版 x.y.z（当前 a.b.c）`，点击弹出操作菜单 |
-| 黄色高亮的版本号 | 该依赖有更新版本 |
-| 状态栏 `⬆ N 个依赖可更新` | 点击触发重新检查 |
-| 左侧活动栏「Pubspec 版本检查」 | 树视图分组展示所有依赖 |
-| 问题面板警告 | `[Pubspec 版本检查] pkg: 当前 x，最新 y` |
-| 悬停依赖行 | 显示约束 / 当前 / 最新版本详情 |
+按 `F5` 选择「运行扩展（调试）」，会打开新的「扩展开发宿主」窗口，再打开任意 Flutter 项目即可看到效果。
 
-点击 CodeLens 或树视图中的「可更新」依赖，可快速选择：
+---
 
-- **更新约束为 `^最新版`**：自动改写 `pubspec.yaml`（建议保存后运行 `flutter pub get`）
-- **复制最新版本号**：复制到剪贴板
-- **在 pub.dev 上查看**：浏览器打开该包主页
+## 🚀 使用步骤
 
-## 配置项
+1. **打开项目**：用 VS Code 打开任意 Flutter / Dart 项目
+2. **等待检查**：扩展会自动读取 `pubspec.yaml` 和 `pubspec.lock`，并向 pub.dev 查询最新版本
+3. **查看提示**：在编辑器、问题面板、状态栏、左侧树视图中查看过期依赖
+4. **快速操作**：
+   - 点击 **CodeLens** → 选择「更新约束为 ^最新版本」
+   - 或按 `Ctrl/Cmd + Shift + P` → 输入 `Pubspec: 检查依赖版本` 手动刷新
+   - 或点击状态栏 `⬆ Pubspec: N 个依赖可更新`
+5. **应用更新**：保存 `pubspec.yaml` 后运行 `flutter pub get`
+
+---
+
+## ⚙️ 配置项
 
 在 `settings.json` 中配置：
 
 | 配置 | 默认 | 说明 |
 | --- | --- | --- |
 | `pubcheck.enable` | `true` | 总开关 |
-| `pubcheck.showOnlyOutdated` | `true` | CodeLens 只显示「有新版」的依赖 |
-| `pubcheck.enableCodeLens` | `true` | 启用 CodeLens |
-| `pubcheck.enableDecorations` | `true` | 启用版本号高亮 |
-| `pubcheck.enableDiagnostics` | `true` | 启用问题面板诊断 |
-| `pubcheck.enableStatusBar` | `true` | 启用状态栏 |
+| `pubcheck.showOnlyOutdated` | `true` | CodeLens 只显示「有新版」的依赖，隐藏已是最新 |
+| `pubcheck.enableCodeLens` | `true` | 在 `pubspec.yaml` 依赖行上方显示最新版本 |
+| `pubcheck.enableDecorations` | `true` | 高亮过期版本号（黄色波浪线） |
+| `pubcheck.enableDiagnostics` | `true` | 在「问题」面板中生成警告 |
+| `pubcheck.enableStatusBar` | `true` | 在状态栏显示可更新数量 |
 | `pubcheck.excludePackages` | `[]` | 跳过检查的包名，如 `["my_private_pkg"]` |
 | `pubcheck.cacheTtlSeconds` | `3600` | pub.dev 查询缓存时间（秒） |
-| `pubcheck.concurrency` | `5` | 并发请求数 |
+| `pubcheck.concurrency` | `5` | 同时向 pub.dev 发起的请求数 |
 
-## 已知限制
+---
 
-- 当前检查**第一个工作区根目录**（多根工作区取首个含 `pubspec.yaml` 的目录）的 `pubspec.yaml`
-- 私有仓库 / 内部 pub 源（非 pub.dev）的包无法查询，会标记为「无法获取版本信息」
-- 升级约束为 `^最新版` 后请自行确认是否存在破坏性变更（major 版本升级）
+## 🔧 开发
 
-## 项目结构
+```bash
+npm install       # 安装依赖
+npm run compile   # 编译到 out/
+npm test          # 运行单元测试（node --test）
+npm run watch     # 增量编译
+npm run package   # 打包 vsix
+```
+
+## 🏗️ 项目结构
 
 ```
 src/
@@ -97,16 +136,16 @@ src/
     └── treeProvider.ts      # 活动栏树视图
 ```
 
-## 开发
+---
 
-```bash
-npm install       # 安装依赖
-npm run compile   # 编译到 out/
-npm test          # 运行单元测试（node --test）
-npm run watch     # 增量编译
-npm run package   # 打包 vsix
-```
+## ⚠️ 已知限制
 
-## License
+- 当前检查**第一个工作区根目录**（多根工作区取首个含 `pubspec.yaml` 的目录）
+- 私有仓库 / 内部 pub 源（非 pub.dev）的包无法查询，会标记为「无法获取版本信息」
+- 升级约束为 `^最新版` 后，请自行确认是否存在破坏性变更（major 版本升级）
 
-MIT
+---
+
+## 📄 License
+
+MIT © [Story5](https://github.com/Story5)
