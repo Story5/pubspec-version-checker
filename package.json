@@ -1,0 +1,174 @@
+{
+  "name": "pubspec-version-checker",
+  "displayName": "Pubspec 版本检查器",
+  "description": "检查 Flutter / Dart 项目 pubspec.yaml 中依赖与插件版本，与 pub.dev 最新版本对比，并通过 CodeLens、装饰、问题面板、状态栏和树视图可视化提示开发者有新版本。",
+  "version": "0.1.0",
+  "publisher": "Story5",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Linters",
+    "Other"
+  ],
+  "keywords": [
+    "flutter",
+    "dart",
+    "pubspec",
+    "pub.dev",
+    "version",
+    "dependencies",
+    "update"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/pubspec.yaml",
+    "onView:pubcheck.dependencies",
+    "onCommand:pubcheck.refresh"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pubcheck.refresh",
+        "title": "Pubspec: 检查依赖版本",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "pubcheck.updatePackage",
+        "title": "Pubspec: 更新依赖版本",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "pubcheck.openPackage",
+        "title": "Pubspec: 在 pub.dev 打开",
+        "icon": "$(link-external)"
+      },
+      {
+        "command": "pubcheck.copyVersion",
+        "title": "Pubspec: 复制最新版本号",
+        "icon": "$(copy)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "pubcheck.refresh",
+          "when": "view == pubcheck.dependencies",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "pubcheck.refresh",
+          "when": "resourceFilename == pubspec.yaml || resourceFilename == pubspec.yml",
+          "group": "pubcheck@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "pubcheck.updatePackage",
+          "when": "false"
+        },
+        {
+          "command": "pubcheck.openPackage",
+          "when": "false"
+        },
+        {
+          "command": "pubcheck.copyVersion",
+          "when": "false"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "pubcheck",
+          "title": "Pubspec 版本检查",
+          "icon": "media/pubcheck.svg"
+        }
+      ]
+    },
+    "views": {
+      "pubcheck": [
+        {
+          "id": "pubcheck.dependencies",
+          "name": "依赖版本",
+          "icon": "$(versions)"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Pubspec 版本检查",
+      "properties": {
+        "pubcheck.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用 / 禁用本扩展的全部功能。"
+        },
+        "pubcheck.showOnlyOutdated": {
+          "type": "boolean",
+          "default": true,
+          "description": "CodeLens 只显示「有新版」的依赖提示，降低噪声；关闭后所有托管依赖都会显示最新版本。"
+        },
+        "pubcheck.enableCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "在 pubspec.yaml 依赖行上方显示最新版本 CodeLens 提示。"
+        },
+        "pubcheck.enableDecorations": {
+          "type": "boolean",
+          "default": true,
+          "description": "高亮 pubspec.yaml 中过期的版本号（黄色下划线）。"
+        },
+        "pubcheck.enableDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "在「问题」面板中为过期的依赖生成警告。"
+        },
+        "pubcheck.enableStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "在状态栏显示可更新依赖数量。"
+        },
+        "pubcheck.excludePackages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "跳过检查的包名列表（例如内部私有包）。"
+        },
+        "pubcheck.cacheTtlSeconds": {
+          "type": "number",
+          "default": 3600,
+          "minimum": 60,
+          "description": "pub.dev 版本查询结果的缓存时间（秒），避免频繁请求触发限流。"
+        },
+        "pubcheck.concurrency": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 20,
+          "description": "同时向 pub.dev 发起的请求数。"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node --test out/tests/",
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.75.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.4.0"
+  }
+}

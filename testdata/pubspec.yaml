@@ -1,0 +1,28 @@
+name: sample_app
+description: "A sample Flutter project."
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+  provider: ^6.1.1
+  dio: 5.4.0
+  intl: ">=0.18.0 <0.20.0"
+  riverpod:
+    version: ^2.5.1
+    hosted: https://pub.dev
+  my_private_pkg:
+    path: ../my_private_pkg
+  git_pkg:
+    git:
+      url: https://github.com/example/git_pkg.git
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
