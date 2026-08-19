@@ -1,8 +1,9 @@
 # Pubspec 版本检查器（Pubspec Version Checker）
 
 [![VS Code Marketplace](https://img.shields.io/badge/VS%20Code%20Marketplace-Install-blue?logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=story5.pubspec-version-checker)
+[![Open VSX Registry](https://img.shields.io/badge/Open%20VSX-Install-purple?logo=eclipse)](https://open-vsx.org/extension/story5/pubspec-version-checker)
 
-一个 VS Code 扩展：**自动检查 Flutter / Dart 项目 `pubspec.yaml` 中依赖（Package）与插件（Plugin）使用的版本，与 [pub.dev](https://pub.dev) 发布的最新版本对比，并通过多种可视化方式提醒开发者有新版本可用。**
+一个 VS Code / Cursor 扩展：**自动检查 Flutter / Dart 项目 `pubspec.yaml` 中依赖（Package）与插件（Plugin）使用的版本，与 [pub.dev](https://pub.dev) 发布的最新版本对比，并通过多种可视化方式提醒开发者有新版本可用。**
 
 ---
 
@@ -52,23 +53,34 @@
 
 > 安装后无需配置，打开任意包含 `pubspec.yaml` 的项目即可自动生效。
 
-### 方式二：本地安装 vsix
+### 方式二：从 Open VSX 安装（Cursor / VSCodium 用户）
+
+Cursor、VSCodium 等基于 Open VSX 的编辑器请使用此方式：
+
+1. 打开 Cursor / VSCodium
+2. 进入 **Extensions**（扩展）面板
+3. 搜索：`Pubspec 版本检查器` 或 `pubspec version checker`
+4. 找到由 **story5** 发布的扩展，点击 **Install**
+
+也可以直接访问 [Open VSX 扩展页面](https://open-vsx.org/extension/story5/pubspec-version-checker) 安装。
+
+### 方式三：本地安装 vsix
 
 如果你已经拿到 `.vsix` 文件：
 
 ```bash
 # 在扩展目录下执行
 npx @vscode/vsce package
-# 生成 pubspec-version-checker-0.1.0.vsix
+# 生成 pubspec-version-checker-0.1.1.vsix
 ```
 
-然后在 VS Code 中：
+然后在 VS Code / Cursor 中：
 
 - 打开命令面板（`Ctrl/Cmd + Shift + P`）
 - 输入 `Extensions: Install from VSIX...`
-- 选择生成的 `pubspec-version-checker-0.1.0.vsix`
+- 选择生成的 `pubspec-version-checker-0.1.1.vsix`
 
-### 方式三：从源码运行/调试
+### 方式四：从源码运行/调试
 
 ```bash
 git clone https://github.com/Story5/pubspec-version-checker.git
