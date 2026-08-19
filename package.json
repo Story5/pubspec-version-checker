@@ -2,7 +2,7 @@
   "name": "pubspec-version-checker",
   "displayName": "Pubspec 版本检查器",
   "description": "检查 Flutter / Dart 项目 pubspec.yaml 中依赖与插件版本，与 pub.dev 最新版本对比，并通过 CodeLens、装饰、问题面板、状态栏和树视图可视化提示开发者有新版本。",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "story5",
   "license": "MIT",
   "repository": {

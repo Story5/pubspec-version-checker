@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 (2026-08-19)
+
+- 重新发布到 Open VSX（修复 Open VSX 0.1.0 版本 inactive 不可见问题）
+
 ## 0.1.0 (2026-08-13)
 
 - 首个版本：解析 pubspec.yaml / pubspec.lock，与 pub.dev 最新版本对比
